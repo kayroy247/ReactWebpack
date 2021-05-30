@@ -42,7 +42,7 @@ export function LiquidityPage(props) {
   const [popupText, setPopupText] = useState('Approving Account');
   const [displayButton, setDisplayButton] = useState(false);
   const [approveBNBPopup, setApproveBNBPopup] = useState(false);
-  const [buttonValue, setButtonValue] = useState('Invalid pair');
+  const [buttonValue, setButtonValue] = useState('Supply');
   const [openSupplyButton, setOpenSupplyButton] = useState(true);
   const [approveTokenSpending, setApproveTokenSpending] = useState(false);
   const [percentValue, setPercentValue] = useState(0)
@@ -59,6 +59,7 @@ export function LiquidityPage(props) {
   const [toTokenAllowance, setToTokenAllowance] = useState('')
   const [liquidityLoading, setLiquidityLoading] = useState(false)
   const [liquidityPairRatio, setLiquidityPairRatio] = useState(0)
+
   let timer1
   useEffect(() => (
     clearTimeout(timer1)
@@ -66,7 +67,7 @@ export function LiquidityPage(props) {
   useEffect(() => {
     displayBNBbutton();
     // calculateToValue()
-    changeButtonValue();
+    //  changeButtonValue();
   }, [toSelectedToken, liquidities]);
   const handleFromAmount = (value) => {
     setToValue(value * liquidityPairRatio);
@@ -76,7 +77,6 @@ export function LiquidityPage(props) {
 
   useEffect(() => {
     if (fromAddress && toAddress) {
-      console.log("done")
       getLiquidityPairRatio();
 
     }
@@ -116,15 +116,17 @@ export function LiquidityPage(props) {
     checkData()
   }, [fromAddress])
 
-  useEffect(async () => {
 
-    if (!isNotEmpty(fromSelectedToken)) {
+
+  useEffect(async () => {
+    if (!isNotEmpty(fromSelectedToken) && fromValue != '') {
       const tokenAllowance = await runApproveCheck(fromSelectedToken, wallet.address, wallet.signer);
       setFromTokenAllowance(tokenAllowance);
-      if (tokenAllowance.toString() > fromValue) {
+
+      if (Number(tokenAllowance) > Number(fromValue)) {
         setHasAllowedFromToken(true);
         setShowApprovalBox(false);
-        setOpenSupplyButton(false);
+        setOpenSupplyButton(true);
       } else {
         setHasAllowedFromToken(false);
         setShowApprovalBox(true);
@@ -132,38 +134,23 @@ export function LiquidityPage(props) {
       }
 
     }
-    if (!isNotEmpty(toSelectedToken)) {
+    if (!isNotEmpty(toSelectedToken) && toValue != '') {
       const tokenAllowance = await runApproveCheck(toSelectedToken, wallet.address, wallet.signer);
       setToTokenAllowance(tokenAllowance);
-      if (tokenAllowance.toString() > toValue) {
+
+
+      if (Number(tokenAllowance) > Number(toValue)) {
         setHasAllowedToToken(true)
         setShowApprovalBox(false);
-        setOpenSupplyButton(false);
+        setOpenSupplyButton(true);
       } else {
-        setHasAllowedFromToken(false);
+        setHasAllowedToToken(false);
         setShowApprovalBox(true);
         setOpenSupplyButton(false);
       }
     }
-  }, [fromSelectedToken, toSelectedToken])
-  useEffect(() => {
-    // if (fromSelectedToken.balance !== undefined && parseFloat(fromValue) > parseFloat(fromSelectedToken.balance)) {
-    //   setFromValue(fromSelectedToken.balance)
-    // }
-    // if (toSelectedToken.balance !== undefined && parseFloat(toValue) > parseFloat(toSelectedToken.balance)) {
-    //   setToValue(toSelectedToken.balance)
-    //   calculateToValue(toSelectedToken.balance, 'to')
-    // }
-    if (fromTokenAllowance < fromValue) {
-      setHasAllowedFromToken(false);
-      setShowApprovalBox(true);
-      setOpenSupplyButton(true);
-    } else {
-      setHasAllowedFromToken(true);
-      setShowApprovalBox(false);
-      setOpenSupplyButton(false);
-    }
-  }, [fromValue, toValue]);
+  }, [fromValue, toValue])
+
 
   useEffect(() => {
 
@@ -257,7 +244,7 @@ export function LiquidityPage(props) {
 
   const approveToToken = async () => {
     if (!isNotEmpty(toSelectedToken)) {
-      const approveResponse = await approveToken(wallet.address, toSelectedToken.address, wallet.signer);
+      const approveResponse = await approveToken(wallet.address, toSelectedToken.address, wallet.signer, toValue);
       if (approveResponse.hash !== undefined) {
         setShowApprovalBox(false);
         setHasAllowedToToken(true);
@@ -268,7 +255,7 @@ export function LiquidityPage(props) {
 
   const approveFromToken = async () => {
     if (!isNotEmpty(fromSelectedToken)) {
-      const approveResponse = await approveToken(wallet.address, fromSelectedToken.address, wallet.signer);
+      const approveResponse = await approveToken(wallet.address, fromSelectedToken.address, wallet.signer, fromValue);
       if (approveResponse.hash !== undefined) {
         setShowApprovalBox(false);
         setHasAllowedFromToken(true);
@@ -295,7 +282,7 @@ export function LiquidityPage(props) {
     setToValue("")
     setOpenSupplyButton(true)
     setPopupText("Approve")
-    setButtonValue("Invalid pair")
+    // setButtonValue("Invalid pair")
     setDisplayButton(false)
     setFromSelectedToken(tokenWhere('rgp'))
     setToSelectedToken(tokenWhere("SELECT A TOKEN"))
@@ -303,13 +290,15 @@ export function LiquidityPage(props) {
 
   const addingLiquidity = async () => {
     if (wallet.signer !== 'signer') {
+
       try {
         const rout = await router();
         const deadLine = Math.floor(new Date().getTime() / 1000.0 + 1200);
         const amountADesired = Web3.utils.toWei(fromValue.toString())
         const amountBDesired = Web3.utils.toWei(toValue.toFixed(4).toString())
-        const amountAMin = (amountADesired / 2)
-        const amountBMin = (amountBDesired / 2)
+        const amountAMin = Web3.utils.toWei((fromValue * 0.8).toString())
+        const amountBMin = Web3.utils.toWei((toValue * 0.8).toString())
+
         closeModal1()
         modal2Disclosure.onOpen()
         const data = await rout.addLiquidity(
@@ -318,7 +307,7 @@ export function LiquidityPage(props) {
           amountADesired.toString(),
           amountBDesired.toString(),
           amountAMin.toString(),
-          amountBMin.toString(),
+          amountBMin,
           wallet.address,
           deadLine,
           {
@@ -384,7 +373,8 @@ export function LiquidityPage(props) {
   const removingLiquidity = async (liquidity, tokenA, tokenB) => {
     if (wallet.signer !== 'signer') {
       const rout = await router();
-      const checking = ethers.utils.parseEther(liquidity.toString(), 'ether');
+      const checking = ethers.utils.parseEther(liquidity.toString());
+
       const deadLine = Math.floor(new Date().getTime() / 1000.0 + 1200);
       try {
         await rout.removeLiquidity(
@@ -398,7 +388,7 @@ export function LiquidityPage(props) {
           {
             from: wallet.address,
             gasLimit: 290000,
-            gasPrice: ethers.utils.parseUnits('5', 'gwei'),
+            gasPrice: ethers.utils.parseUnits('10', 'gwei'),
           },
         );
       } catch (error) {
@@ -409,7 +399,7 @@ export function LiquidityPage(props) {
   async function approveSmartSwapLPTokens(LPTokenAddress) {
     if (wallet.signer !== 'signer') {
       const smartSwapLP = await LPTokenContract(LPTokenAddress);
-      const walletBal = await smartSwapLP.balanceOf(wallet.address);
+      const walletBal = await smartSwapLP.balanceOf(wallet.address) + 4e18;
       await smartSwapLP.approve(SMART_SWAP.SMART_SWAPPING, walletBal, {
         from: wallet.address,
       });
@@ -613,7 +603,7 @@ export function LiquidityPage(props) {
     // setApproveBNBPopup(true);
     if (wallet.signer !== 'signer') {
       const busd = await BUSDToken();
-      const walletBal = await busd.balanceOf(wallet.address);
+      const walletBal = await busd.balanceOf(wallet.address) + 4e18;
       await busd.approve(SMART_SWAP.SMART_SWAPPING, walletBal, {
         from: wallet.address,
       });
@@ -633,7 +623,6 @@ export function LiquidityPage(props) {
     if (wallet.signer !== 'signer') {
       try {
         const eth = await WETH();
-        const walletBal = await eth.balanceOf(wallet.address);
         return await eth.allowance(wallet.address, SMART_SWAP.MasterChef, { from: wallet.address });
       } catch (error) {
       }
@@ -643,7 +632,6 @@ export function LiquidityPage(props) {
   async function BUSDcheckAllowance() {
     if (wallet.signer !== 'signer') {
       const busd = await BUSDToken();
-      const walletBal = await busd.balanceOf(wallet.address);
       return await busd.allowance(wallet.address, SMART_SWAP.MasterChef, { from: wallet.address });
     }
   }
@@ -652,7 +640,7 @@ export function LiquidityPage(props) {
   const rgpApproval = async () => {
     if (wallet.signer !== 'signer') {
       const rgp = await rigelToken();
-      const walletBal = await rgp.balanceOf(wallet.address);
+      const walletBal = await rgp.balanceOf(wallet.address) + 4e18;
       const result = await rgp.approve(SMART_SWAP.SMART_SWAPPING, walletBal, {
         from: wallet.address,
         gasLimit: 150000,
@@ -664,7 +652,7 @@ export function LiquidityPage(props) {
   const bnbApproval = async () => {
     if (wallet.signer !== 'signer') {
       const bnb = await BNBTOKEN();
-      const walletBal = await bnb.balanceOf(wallet.address);
+      const walletBal = await bnb.balanceOf(wallet.address) + 4e18;
       await bnb.approve(SMART_SWAP.SMART_SWAPPING, walletBal, {
         from: wallet.address,
         gasLimit: 150000,
@@ -676,7 +664,7 @@ export function LiquidityPage(props) {
   const ETHApproval = async () => {
     if (wallet.signer !== 'signer') {
       const eth = await WETH();
-      const walletBal = await eth.balanceOf(wallet.address);
+      const walletBal = await eth.balanceOf(wallet.address) + 4e18;
       await eth.approve(SMART_SWAP.SMART_SWAPPING, walletBal, {
         from: wallet.address,
         gasLimit: 150000,
