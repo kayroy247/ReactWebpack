@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Flex, Button, Tooltip } from '@chakra-ui/react';
+import { Box, Flex, Button, Spinner, Tooltip } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import ShowYieldFarmDetails from './ShowYieldFarmDetails';
 import BNBImage from '../../assets/bnb.svg';
@@ -7,14 +7,39 @@ import ETHImage from '../../assets/eth.svg';
 import RGPImage from '../../assets/rgp.svg';
 import BUSDImage from '../../assets/busd.svg';
 
-const YieldFarm = ({ content, wallet }) => {
+const YieldFarm = ({
+  content,
+  wallet,
+  onOpenModal,
+  setShowModalWithInput,
+  refreshTokenStaked,
+  loadingTotalLiquidity,
+  isAddressWhitelist,
+}) => {
   const [showYieldfarm, setShowYieldFarm] = useState(false);
 
+  const formatAmount = value => parseFloat(value).toLocaleString();
+
+  const totalLiquidityValue = () => {
+    if (loadingTotalLiquidity) {
+      return <Spinner speed="0.65s" color="blue.500" />;
+    }
+    if (content.totalLiquidity) {
+      return `$ ${formatAmount(content.totalLiquidity)}`;
+    }
+  };
+  const checkIfAddressIsWhiteListed = () => {
+    if (isAddressWhitelist) {
+      setShowYieldFarm(!showYieldfarm);
+    } else {
+      onOpenModal();
+    }
+  };
   return (
     <>
       <Flex
         justifyContent="space-between"
-        flexDirection={['column', 'row']}
+        flexDirection={['column', 'column', 'row']}
         color="white"
         margin="0 auto"
         background="linear-gradient(
@@ -26,13 +51,13 @@ const YieldFarm = ({ content, wallet }) => {
         paddingBottom="4px"
         marginTop="20px"
         borderRadius="10px"
-        width={["95%", "100%"]}
+        width={['95%', '95%', '100%']}
       >
         <Flex justifyContent="space-between" width="100%">
           <Box
             marginTop="15px"
             align="left"
-            display={['block', 'none']}
+            display={['block', 'block', 'none']}
             opacity="0.5"
           >
             Deposit
@@ -45,7 +70,7 @@ const YieldFarm = ({ content, wallet }) => {
           <Box
             marginTop="15px"
             align="left"
-            display={['block', 'none']}
+            display={['block', 'block', 'none']}
             opacity="0.5"
           >
             Earn
@@ -61,31 +86,34 @@ const YieldFarm = ({ content, wallet }) => {
           <Box
             marginTop="15px"
             align="left"
-            display={['block', 'none']}
+            display={['block', 'block', 'none']}
             opacity="0.5"
           >
             APY
           </Box>
           <Box marginTop="15px" align="left">
-            {content.APY}
+            {formatAmount(content.ARYValue)} %
           </Box>
         </Flex>
-        <Flex justifyContent="space-between" width="100%">
+        <Flex
+          justifyContent="space-between"
+          width="100%"
+          marginBottom={['10px', '10px', '0']}
+        >
           <Box
             marginTop="15px"
             align="left"
-            display={['block', 'none']}
+            display={['block', 'block', 'none']}
             opacity="0.5"
           >
             Total Liquidity
           </Box>
           <Box marginTop="15px" align="left">
-            ${content.totalLiquidity}
+            {totalLiquidityValue()}
           </Box>
         </Flex>
-        <Tooltip label="In few days" bg="#120136" aria-label="A tooltip">
-          <Box align="right" mt={['4', '0']} ml="2">
-
+        <Box align="right" mt={['4', '0']} ml="2">
+          {content.id == 1 ? (
             <Button
               w={['100%', '100%', '146px']}
               h="40px"
@@ -94,19 +122,35 @@ const YieldFarm = ({ content, wallet }) => {
               color="#40BAD5"
               border="0"
               mb="4"
-              disabled
-              cursor="not-allowed"
               _hover={{ color: '#423a85' }}
-            // onClick={() => setShowYieldFarm(!showYieldfarm)}
+              onClick={checkIfAddressIsWhiteListed}
             >
               Unlock
-          </Button>
-          </Box>
-        </Tooltip>
-
+            </Button>
+          ) : (
+            <Button
+              w={['100%', '100%', '146px']}
+              h="40px"
+              borderRadius="12px"
+              bg="rgba(64, 186, 213, 0.1);"
+              color="#40BAD5"
+              border="0"
+              mb="4"
+              cursor="pointer"
+              _hover={{ color: '#423a85' }}
+              onClick={() => setShowYieldFarm(!showYieldfarm)}
+            >
+              Unlock
+            </Button>
+          )}
+        </Box>
       </Flex>
       {showYieldfarm && (
-        <ShowYieldFarmDetails content={content} wallet={wallet} />
+        <ShowYieldFarmDetails
+          content={content}
+          wallet={wallet}
+          refreshTokenStaked={refreshTokenStaked}
+        />
       )}
     </>
   );

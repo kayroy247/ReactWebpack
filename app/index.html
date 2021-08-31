@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate, max-age=0"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <!-- The first thing in any HTML file should be the charset -->
     <meta charset="utf-8" />
-
     <!-- Make the page mobile compatible -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Allow installing the app to the homescreen -->
     <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Allow installing the app to the homescreen -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="icon" href="/favicon.ico" />
 
     <link rel="icon" href="/favicon.ico" />
     <title>
@@ -32,6 +41,11 @@
       href="./assets/faviconpack/favicon.ico"
       type="image/x-icon"
     />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
@@ -49,7 +63,6 @@
       sizes="16x16"
       href="./assets/faviconpack/favicon-16x16.svg"
     />
-    <link rel="manifest" href="./assets/faviconpack/site.webmanifest" />
     <link
       rel="mask-icon"
       href="./assets/faviconpack/safari-pinned-tab.svg"
@@ -57,8 +70,36 @@
     />
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
-  </head>
 
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://smartswap.rigelprotocol.com" />
+    <meta
+      property="og:title"
+      content="RigelProtocol - Smart Swapping Exchange, Yield Farming, Margin Trading & Cross Chain Protocol"
+    />
+    <meta
+      property="og:description"
+      content="RigelProtocol is a number of Decentralized finance(DEFI) products: Smart swapping exchange, Margin trading, yield farming and cross-chain on both Binance Smart Chain and Ethereum Chain. Highly Secure, Seamless Transactions and low fees "
+    />
+    <meta property="og:image" content="/favicon-16x16.svg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta
+      property="twitter:url"
+      content="https://smartswap.rigelprotocol.com/"
+    />
+    <meta
+      property="twitter:title"
+      content="RigelProtocol - Smart Swapping Exchange, Yield Farming, Margin Trading & Cross Chain Protocol"
+    />
+    <meta
+      property="twitter:description"
+      content="RigelProtocol is a number of Decentralized finance(DEFI) products: Smart swapping exchange, Margin trading, yield farming and cross-chain on both Binance Smart Chain and Ethereum Chain. Highly Secure, Seamless Transactions and low fees "
+    />
+    <meta property="twitter:image" content="/favicon-16x16.svg" />
+  </head>
   <body>
     <!-- Display a message if JS has been disabled on the browser. -->
     <noscript

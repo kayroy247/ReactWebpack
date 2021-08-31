@@ -1,26 +1,29 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import { Flex, Text } from '@chakra-ui/layout';
+import React, { useEffect } from 'react';
+import { Flex, Text, Box, Circle } from '@chakra-ui/layout';
 import { Menu } from '@chakra-ui/menu';
 import { Button } from '@chakra-ui/button';
 import { Input } from '@chakra-ui/input';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useMediaQuery, Image } from '@chakra-ui/react';
 import { tokenList, tokenWhere } from '../../utils/constants';
+import NullImage24 from '../../assets/Null-24.svg';
 
 const InputSelector = ({ max, value, onOpen, handleChange, selectedToken }) => {
   const [isMobileDevice] = useMediaQuery('(min-width: 560px)');
   if (isMobileDevice) {
     return (
       <>
-        <Flex justifyContent="space-between">
+        <Flex justifyContent="space-between" mb={2}>
           <Input
             placeholder="0.0"
-            fontSize="lg"
-            color=" rgba(255, 255, 255,0.25)"
+            fontSize="28px"
+            color=" rgba(255,255,255)"
             value={value}
             isRequired
-            width="38%"
+            width="40%"
+            border={0}
+            variant="unstyled"
             onChange={e => {
               handleChange(e);
             }}
@@ -28,7 +31,7 @@ const InputSelector = ({ max, value, onOpen, handleChange, selectedToken }) => {
           <Flex
             cursor="pointer"
             justifyContent="space-between"
-            alignItems="center"
+            alignItems="right"
           >
             {max ? (
               <Text
@@ -36,8 +39,9 @@ const InputSelector = ({ max, value, onOpen, handleChange, selectedToken }) => {
                 p="5px 10px"
                 rounded="lg"
                 mt="10px"
-                mr="15px"
-                fontSize="sm"
+                fontSize="xs"
+                width="50%"
+                textAlign="center"
                 color="#72cfe4"
                 _hover={{ background: 'rgba(64, 186, 213,0.35)' }}
                 onClick={e => {
@@ -49,33 +53,34 @@ const InputSelector = ({ max, value, onOpen, handleChange, selectedToken }) => {
             ) : (
               <></>
             )}
-            <Flex>
+            <Box>
               <Menu>
                 <Button
                   onClick={onOpen}
                   border="0px"
-                  h="30px"
+                  pl={3}
                   fontWeight="regular"
                   fontSize="16px"
                   cursor="pointer"
                   bg={selectedToken ? 'none' : '#40BAD5'}
-                  marginBottom="5px"
+
                   color="white"
                   _hover={{ background: '#72cfe4', color: '#29235E' }}
                   rightIcon={<ChevronDownIcon />}
                 >
                   {typeof selectedToken.symbol !== 'undefined' && (
                     <>
-                      <Image src={selectedToken.img} />
-                      <span
-                        className={`icon icon-${selectedToken.symbol.toLowerCase()}`}
-                      />
-                      <Text ml={4}>{selectedToken.symbol}</Text>
+                      <Circle size="40px" color="rgba(64, 186, 213,0.35)">
+                        <Image src={selectedToken.logoURI} />
+                      </Circle>
+
+                      {selectedToken.imported === true && <NullImage24 />}
+                      <Text ml={2}>{selectedToken.symbol}</Text>
                     </>
                   )}
                 </Button>
               </Menu>
-            </Flex>
+            </Box>
           </Flex>
         </Flex>
       </>

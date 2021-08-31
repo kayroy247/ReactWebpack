@@ -11,6 +11,7 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
+  Image,
 } from '@chakra-ui/react';
 import { QuestionIcon, ArrowUpIcon, CloseIcon } from '@chakra-ui/icons';
 import { Box, Flex } from '@chakra-ui/layout';
@@ -29,13 +30,20 @@ const ConfirmSwapBox = props => {
     closeModal2,
     closeModal3,
     closeModal4,
+    closeModal5,
+    URLNetwork,
+    minimumAmountToReceive,
     modal1Disclosure,
     modal2Disclosure,
     modal3Disclosure,
     modal4Disclosure,
+    modal5Disclosure,
+    openLiquidityPage,
     selectedToken,
     selectedToToken,
     openLoadingSpinnerAndSwap,
+    liquidityProviderFee,
+    route,
   } = props;
 
   return (
@@ -58,17 +66,15 @@ const ConfirmSwapBox = props => {
           <ModalBody>
             <Flex justifyContent="space-between">
               <Box>
-                <Text>{fromAmount}</Text>
+                <Text>{fromAmount} </Text>
               </Box>
               <Box>
                 <Text>
-                  {isNotEmpty(selectedToken) && (
-                    <span
-                      className={`icon icon-${selectedToken.symbol.toLowerCase()}`}
-                    />
+                  {!isNotEmpty(selectedToken) && (
+                    <Image src={selectedToken.logoURI} />
                   )}
                   {` `}
-                  {isNotEmpty(selectedToken) && selectedToken.symbol}
+                  {!isNotEmpty(selectedToken) && selectedToken.symbol}
                 </Text>
               </Box>
             </Flex>
@@ -81,10 +87,8 @@ const ConfirmSwapBox = props => {
               </Box>
               <Box>
                 <Text>
-                  {isNotEmpty(selectedToToken) && (
-                    <span
-                      className={`icon icon-${selectedToToken.symbol.toLowerCase()}`}
-                    />
+                  {!isNotEmpty(selectedToToken) && (
+                    <Image src={selectedToToken.logoURI} />
                   )}
                   {` `}
                   {path[1] !== undefined && path[1].token !== undefined
@@ -101,7 +105,8 @@ const ConfirmSwapBox = props => {
               <Flex m="1" justifyContent="space-between">
                 <Text mt={-1}> Price </Text>
                 <Box>
-                  {tokenPrice} {path[0].token} / {path[1] ? path[1].token : ''}
+                  {tokenPrice} {path[0] && path[0].token} /{' '}
+                  {path[1] ? path[1].token : ''}
                 </Box>
               </Flex>
               <Flex m="1" justifyContent="space-between">
@@ -109,7 +114,7 @@ const ConfirmSwapBox = props => {
                   {' '}
                   Minimum received <QuestionIcon />
                 </Text>
-                <Box>{amountIn}</Box>
+                <Box>{minimumAmountToReceive()}</Box>
               </Flex>
               <Flex m="1" justifyContent="space-between">
                 <Text>
@@ -120,13 +125,28 @@ const ConfirmSwapBox = props => {
                   <Text>1.49%</Text>
                 </Box>
               </Flex>
+              {/* swap route */}
+
               <Flex m="1" justifyContent="space-between">
                 <Text>
                   {' '}
                   Liquidity Provider Fee <QuestionIcon />{' '}
                 </Text>
                 <Box>
-                  <Text>0.03 {path[0].token}</Text>
+                  <Text>
+                    {liquidityProviderFee()} {path[0] && path[0].token}
+                  </Text>
+                </Box>
+              </Flex>
+
+              <Flex m="0.5" justifyContent="space-between">
+                <Text>
+                  {' '}
+                  Route <QuestionIcon />{' '}
+                </Text>
+                <Box textAlign="right">
+                  {/* <Text>ETH{'>'}RGP</Text> */}
+                  <Text>{route}</Text>
                 </Box>
               </Flex>
             </Box>
@@ -198,7 +218,11 @@ const ConfirmSwapBox = props => {
               fontWeight="normal"
               color="rgba(64, 186, 213, 1)"
             >
-              <a href="#">View on Etherscan</a>
+              {URLNetwork && (
+                <a href={`${URLNetwork}`} target="_blank">
+                  View on BSCSCAN
+                </a>
+              )}
             </Text>
             <Button
               width="100%"
@@ -240,7 +264,11 @@ const ConfirmSwapBox = props => {
               fontWeight="normal"
               color="rgba(64, 186, 213, 1)"
             >
-              <a href="#">View on Etherscan</a>
+              {URLNetwork && (
+                <a href={`${URLNetwork}`} target="_blank">
+                  View on BSCSCAN
+                </a>
+              )}
             </Text>
             <Button
               width="100%"

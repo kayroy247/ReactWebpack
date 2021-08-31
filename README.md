@@ -1,71 +1,46 @@
-<h1 align="center">
-Rigel Protocol Smart Swap
-</h1>
-<br />
+# Rigel Protocol smartSwapV1
 
-<div align="center">A highly scalable, offline-first foundation with the best DX and a focus on performance and best practices</div>
+Rigel's protocol smartswap decentralized exchange is a fundamental exchange with excellent features like yield farming, margin Trading and cross chain protocol. With these, users are allowed to trade various tokens like BNB, BUSD, USDT, ETH, TRON, and BAND on the Binance Smart Chain, with many other tokens like USDT, LINK, DAI, CRO, UNI, YFI, OMG, HEX and lots more.
 
-<br />
+- Website: [rigelProtocol.com](https://rigelprotocol.com/)
+- Interface: [smartswap.rigelprotocol.com](https://smartswap.rigelprotocol.com/smart-swapping)
+- RoadMap: [rigelprotocol.com](https://rigelprotocol.com/)
+- Twitter: [@rigelprotocol](https://twitter.com/rigelprotocol)
+- Medium: [rigelprotocol](https://medium.com/rigelprotocol)
+- Linkedin: [rigelprotocol](https://www.linkedin.com/company/rigelprotocol)
+- Discord: [rigelprotocol](https://discord.com/invite/j86NH95GDD)
+- Email: [support@rigelprotocol](mailto:support@rigelprotocol.com)
+- Telegram: [rigel protocol](https://www.t.me/rigelprotocol)
+- Whitepaper: [Link](https://drive.google.com/file/d/1Q0u71tqJ0GsW4Nk_rrxXmIk4VcMfPHHY/view)
 
-## Features
+## What makes us different
 
-<dl>
-  <dt>Quick scaffolding</dt>
-  <dd>Create components, containers, routes, selectors and sagas - and their tests - right from the CLI!</dd>
+| What makes us different | Low transaction fees  | Community |
+| ------------- |:-------------:| -----:|
+| Transparency is key to us, which is why we give you  total control over your funds while you are using any of our products. | Cross chain operations guarantee low transaction  fees without the need to leave funds on custody to  third parties or go through KYC process. | The Rigel Protocol is completely designed, set up,  developed, and driven by the Rigel Protocol community. All proposals and decision-making developments are established and decided within the community.|
 
-  <dt>Instant feedback</dt>
-  <dd>Enjoy the best DX (Developer eXperience) and code your app at the speed of thought! Your saved changes to the CSS and JS are reflected instantaneously without refreshing the page. Preserve application state even when you update something in the underlying code!</dd>
+## Access Spoke rigel protocol smartswapV1
+To access the rigel protocol smartswapV1, visit [smartswap.rigelprotocol.com](https://smartswap.rigelprotocol.com/smart-swapping).
 
-  <dt>Predictable state management</dt>
-  <dd>Unidirectional data flow allows for change logging and time travel debugging.</dd>
+## Development
 
-  <dt>Next generation JavaScript</dt>
-  <dd>Use template strings, object destructuring, arrow functions, JSX syntax and more.</dd>
+### Install Dependencies
 
-  <dt>Next generation CSS</dt>
-  <dd>Write composable CSS that's co-located with your components for complete modularity. Unique generated class names keep the specificity low while eliminating style clashes. Ship only the styles that are on the page for the best performance.</dd>
+```
+yarn
+```
 
-  <dt>Industry-standard routing</dt>
-  <dd>It's natural to want to add pages (e.g. `/about`) to your application, and routing makes this possible.</dd>
+### Run
 
-  <dt>Industry-standard i18n internationalization support</dt>
-  <dd>Scalable apps need to support multiple languages, easily add and support multiple languages with `react-intl`.</dd>
+```
+yarn start
+```
 
-  <dt>Offline-first</dt>
-  <dd>The next frontier in performant web apps: availability without a network connection from the instant your users load the app.</dd>
+Note that the smartswapV1 works on BSC mainnet and  BSC testnets where both 
+[smartswapRouter Contract ](https://bscscan.com/address/0xf78234e21f1f34c4d8f65faf1bc82bfc0fa24920) are deployed.
+The smartswapV1 will not work on other networks at the moment.
 
-  <dt>Static code analysis</dt>
-  <dd>Focus on writing new features without worrying about formatting or code quality. With the right editor setup, your code will automatically be formatted and linted as you work.</dd>
+## Accessing Rigel Protocol SmartswapV1
 
-  <dt>SEO</dt>
-  <dd>We support SEO (document head tags management) for search engines that support indexing of JavaScript content. (eg. Google)</dd>
-</dl>
-
-But wait... there's more!
-
-- _The best test setup:_ Automatically guarantee code quality and non-breaking
-  changes. (Seen a react app with 100% test coverage before?)
-- _Native web app:_ Your app's new home? The home screen of your users' phones.
-- _The fastest fonts:_ Say goodbye to vacant text.
-- _Stay fast_: Profile your app's performance from the comfort of your command
-  line!
-- _Catch problems:_ AppVeyor and TravisCI setups included by default, so your
-  tests get run automatically on Windows and Unix.
-
-## Quick start
-
-1.  Make sure that you have Node.js v8.15.1 and npm v5 or above installed.
-2.  Move to the appropriate directory: `cd <YOUR_PROJECT_NAME>`.<br />
-3.  Run `npm run setup` in order to install dependencies and clean the git repo.<br />
-    _At this point you can run `npm start` to see the example app at `http://localhost:3000`._
-
-## Documentation
-
-- [**The Hitchhiker's Guide to `This Repo`**](docs/general/introduction.md): An introduction for newcomers to this boilerplate.
-- [Overview](docs/general): A short overview of the included tools
-- [**Commands**](docs/general/commands.md): Getting the most out of this boilerplate
-- [Testing](docs/testing): How to work with the built-in test harness
-- [Styling](docs/css): How to work with the CSS tooling
-- [Your app](docs/js): Supercharging your app with Routing, Redux, simple
-  asynchronicity helpers, etc.
-- [**Troubleshooting**](docs/general/gotchas.md): Solutions to common problems that we might possibly face.
+The Rigel Protocol smartswapV1 supports swapping against, adding and removing liquidity from Rigel Protocol. However,
+if you would like to use Rigel Protocol, the smartswapV1 for mainnet and testnets is accessible [rigel protocol](https://github.com/rigelprotocol/smartswapv1).

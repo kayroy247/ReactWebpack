@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { Box, Flex, Text } from '@chakra-ui/layout';
-import { Input, Button } from '@chakra-ui/react';
+import { Input, Button, InputGroup, InputRightElement } from '@chakra-ui/react';
 import { Menu } from '@chakra-ui/menu';
 import PropTypes from 'prop-types';
 
@@ -17,8 +17,14 @@ const Manual = ({
   toSelectedToken,
   setToSelectedToken,
   label,
+  checkIfLiquidityPairExist,
+  setDetermineInputChange,
+  setToInputMax,
+  setToValue
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure()
+
   return (
     <>
       <Box
@@ -41,6 +47,7 @@ const Manual = ({
           </Text>
         </Flex>
         <Flex justifyContent="space-between" alignItems="center">
+          <InputGroup>
           <Input
             type="number"
             id="input__field"
@@ -49,9 +56,20 @@ const Manual = ({
             border="1px solid rgba(255, 255, 255,0.25)"
             fontSize="lg"
             color="rgb(255, 255, 255)"
-            disabled
-            onChange={event => event.preventDefault()}
+            onChange={event => {
+              setToValue(event.target.value);
+              setDetermineInputChange("to")
+            }}
           />
+             <InputRightElement marginRight="5px">
+              <Text
+              cursor="pointer" 
+              color="rgba(64, 186, 213, 1)"
+              onClick={()=>setToInputMax()}>
+                max
+              </Text>
+          </InputRightElement>
+          </InputGroup>
           <Flex alignItems="center">
             <Menu>
               <Button
@@ -77,6 +95,10 @@ const Manual = ({
                 setPathArray={setToAddress}
                 isOpen={isOpen}
                 onClose={onClose}
+                isOpenModal={isOpenModal}
+                checkIfLiquidityPairExist={checkIfLiquidityPairExist}
+                onOpenModal={onOpenModal}
+                onCloseModal={onCloseModal}
               />
             </Menu>
           </Flex>
@@ -87,10 +109,13 @@ const Manual = ({
 };
 
 Manual.propTypes = {
-  toValue: PropTypes.number.isRequired,
+  toValue: PropTypes.string.isRequired,
   setToAddress: PropTypes.func.isRequired,
   toSelectedToken: PropTypes.object.isRequired,
   setToSelectedToken: PropTypes.func.isRequired,
+  checkIfLiquidityPairExist: PropTypes.func.isRequired,
+  setToValue: PropTypes.func.isRequired,
+  disableToSelectInputBox: PropTypes.bool.isRequired,
   label: PropTypes.string,
 };
 export default Manual;

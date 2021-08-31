@@ -3,9 +3,9 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { notify } from 'containers/NoticeProvider/actions';
 import configureStore from 'configureStore';
 import { WALLET_CONNECTED } from 'containers/WalletProvider/constants';
-import { formatBalance } from 'utils/UtilFunc';
-import { balanceAbi } from '../constants';
-const store = configureStore();
+import { formatBalance, convertFromWei } from 'utils/UtilFunc';
+import { balanceAbi, decimalAbi } from '../constants';
+const { store } = configureStore();
 
 export const provider = async () => {
   try {
@@ -37,12 +37,17 @@ export const getAddressTokenBalance = async (
   walletSigner,
 ) =>
   formatBalance(
-    ethers.utils.formatEther(
+    convertFromWei(
       await new ethers.Contract(
         tokenAddress,
         balanceAbi,
         walletSigner,
       ).balanceOf(address),
+      await new ethers.Contract(
+        tokenAddress,
+        decimalAbi,
+        walletSigner,
+      ).decimals(),
     ),
   );
 /**
@@ -87,7 +92,87 @@ export const connectionEventListener = wallet => dispatch => {
   return true;
 };
 
-export function disconnectUser() {
-  console.log('>>>> Hello All');
-}
+export function disconnectUser() {}
 // Object.fromEntries( Object.entries(TOKENS_CONTRACT).filter(([key, value]) => key === symbol))
+export const setupNetwork = async () => {
+  const walletProvider = window.ethereum;
+  if (walletProvider !== undefined && walletProvider.isTrust) {
+    const chainId = 38;
+    const deviceChainId = await window.ethereum.request({
+      method: 'eth_chainId',
+    });
+    if (deviceChainId !== '0x38') {
+      try {
+        await walletProvider.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: `0x${chainId.toString()}`,
+              chainName: 'Smart Chain',
+              nativeCurrency: {
+                name: 'BNB',
+                symbol: 'bnb',
+                decimals: 18,
+              },
+              rpcUrls: ['https://bsc-dataseed.binance.org/'],
+              blockExplorerUrls: ['https://bscscan.com/'],
+            },
+          ],
+        });
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+  }
+};
+
+const supportedNetworks = ['0x61', '0x38', 'chainId'];
+
+export const isSupportedNetwork = chainId =>
+  supportedNetworks.includes(chainId);
+
+const checkMetamask = async () => {
+  const provider = await detectEthereumProvider();
+  return !!provider;
+};
+
+export const switchToBSC = async () => {
+  if (checkMetamask()) {
+    try {
+      await ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x38' }],
+      });
+    } catch (switchError) {
+      // This error code indicates that the chain has not been added to MetaMask.
+      if (switchError.code === 4902) {
+        addBSCToMetamask();
+      }
+      // handle other  errors codes
+    }
+  }
+};
+
+const addBSCToMetamask = async () => {
+  try {
+    await ethereum.request({
+      method: 'wallet_addEthereumChain',
+      params: [
+        {
+          chainId: '0x38',
+          chainName: 'Smart Chain',
+          nativeCurrency: {
+            name: 'BSC Mainet',
+            symbol: 'BNB',
+            decimals: 18,
+          },
+          rpcUrls: ['https://bsc-dataseed.binance.org/'],
+          blockExplorerUrls: ['https://bscscan.com/'],
+        },
+      ],
+    });
+  } catch (addError) {
+    console.log(addError);
+  }
+};

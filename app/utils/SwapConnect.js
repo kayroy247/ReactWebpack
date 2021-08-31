@@ -3,21 +3,26 @@ import { ethers } from 'ethers';
 import BUSD from 'utils/abis/BUSD.json';
 import LiquidityPairAbi from 'utils/abis/smartSwapLPToken.json';
 import RigelToken from 'utils/abis/RigelToken.json';
+import ERC20Token from 'utils/abis/ERC20Token.json';
 import SmartSwapFactoryForSwap from 'utils/abis/SmartSwapFactoryForSwap.json';
 import SmartSwapRouter02 from 'utils/abis/SmartSwapRouter02.json';
 import SmartSwapLPToken from 'utils/abis/smartSwapLPToken.json';
 import ETHRGPSMARTSWAPPAIR from 'utils/abis/ETHRGPSMARTSWAPPAIR.json';
+import masterChef from 'utils/abis/masterChef.json';
+import SmartSwapLPTokenOne from 'utils/abis/SmartSwapLPTokenOne.json';
+import SmartSwapLPTokenTwo from 'utils/abis/SmartSwapLPTokenTwo.json';
+import SmartSwapLPTokenThree from 'utils/abis/SmartSwapLPTokenThree.json';
 import WETH9 from 'utils/abis/WETH9.json';
 import lPContractABI from 'utils/abis/lPContractABI.json';
 import specialPool from 'utils/abis/specialPool.json';
 import configureStore from 'configureStore';
 import { SMART_SWAP, checkNetVersion } from './constants';
 
-const store = configureStore();
+const { store } = configureStore();
 export const getProvider = () => {
   try {
     return new ethers.providers.Web3Provider(window.ethereum);
-  } catch (Exception) { }
+  } catch (Exception) {}
 };
 export const getSigner = () => {
   try {
@@ -29,9 +34,8 @@ export const getSigner = () => {
       }
     }
     return signer;
-  } catch (e) { }
+  } catch (e) {}
 };
-
 // ----------------------------------------------------------------- LIVE DEPLOYMENT CONTRACT -----------------------------------------
 
 //
@@ -50,10 +54,34 @@ export const updateOutPutAmountForRouter = async () =>
     getSigner(),
   );
 
+export const masterChefContract = async () =>
+  new ethers.Contract(SMART_SWAP.masterChef, masterChef, getSigner());
+
+export const smartSwapLPTokenPoolOne = async () =>
+  new ethers.Contract(
+    SMART_SWAP.masterChefPoolOne,
+    SmartSwapLPTokenOne,
+    getSigner(),
+  );
+
+export const smartSwapLPTokenPoolTwo = async () =>
+  new ethers.Contract(
+    SMART_SWAP.masterChefPoolTwo,
+    SmartSwapLPTokenTwo,
+    getSigner(),
+  );
+
+export const smartSwapLPTokenPoolThree = async () =>
+  new ethers.Contract(
+    SMART_SWAP.masterChefPoolThree,
+    SmartSwapLPTokenThree,
+    getSigner(),
+  );
+
 // router contract where trx is made for both liquidity and swap
 export const smartSwapLPToken = async () =>
   new ethers.Contract(
-    SMART_SWAP.SmartSwap_LP_Token,
+    SMART_SWAP.masterChefPoolOne,
     SmartSwapLPToken,
     getSigner(),
   );
@@ -89,7 +117,10 @@ export const BNBTOKEN = async () =>
 
 // WETH (ETH)
 export const WETH = async () => {
-  const WETH9Address = (checkNetVersion() == 56) ? '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c' : '0x23967E68bB6FeA03fcc3676F8E55272106F44A4A';
+  const WETH9Address =
+    checkNetVersion() == 56
+      ? '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+      : '0x23967E68bB6FeA03fcc3676F8E55272106F44A4A';
   return new ethers.Contract(WETH9Address, WETH9, getSigner());
 };
 
