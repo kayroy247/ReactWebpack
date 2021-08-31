@@ -91,7 +91,7 @@ const App = props => {
         4,
       );
       props.updateRGPprice(RGPprice);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -127,7 +127,7 @@ const App = props => {
           <Route exact path="/swap/" component={HomePage} />
           <Route exact path="/swap/:pair" component={HomePage} />
           <Route exact path="/margin-trading" component={MarginTradingPage} />
-          <Route component={NotFoundPage} />
+          <Route path="*" component={NotFoundPage} />
         </Switch>
       </ThemeProvider>
     </ToastProvider>
