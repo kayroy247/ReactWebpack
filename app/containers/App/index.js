@@ -127,7 +127,7 @@ const App = props => {
           <Route exact path="/swap/" component={HomePage} />
           <Route exact path="/swap/:pair" component={HomePage} />
           <Route exact path="/margin-trading" component={MarginTradingPage} />
-          <Route path="*" component={NotFoundPage} />
+          <Route component={NotFoundPage} />
         </Switch>
       </ThemeProvider>
     </ToastProvider>
