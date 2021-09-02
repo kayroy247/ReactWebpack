@@ -632,8 +632,8 @@ export function FarmingPage(props) {
                 />
                 <Text>Deposit</Text>
                 <Text>Earn</Text>
-                <Text>APY </Text>
-                <Text>Total Liquidity $</Text>
+                <Text>APY %</Text>
+                <Text>Total Liquidity </Text>
                 <Text />
               </Flex>
               {props.farming.contents.map(content => (
